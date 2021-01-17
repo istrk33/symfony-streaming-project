@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ serie.title }}
+	: season
+	{{season.number}}
+{% endblock %}
+
+{% block body %}
+
+<a href="{{path('serie_show', {'serieId':serie.Id})}}"  class="btn btn-info">back</a>
+<br>
+
+<br>
+<div class="row row-cols-1 row-cols-md-5 g-4" style="width: 99%;margin-left:8px;">
+	{% for episode in episodes|sort ((a, b) => a.number <=> b.number) %}
+	<div class="col" >
+    	<div class="card bg-dark">
+			<div class="card-body">
+		        <h5 class="card-title" style="color:white;">Title : {{ episode.title }}</h5>
+				<p>Episode  {{ episode.number }}</p>
+				<p>Date of parution {{ (episode.date)|format_datetime() }}</p>
+				<p>IMDB rating {{ episode.imdbrating }}/10</p>
+				<p>IMDB page for the episode :</p>
+				<div class="btn-group-vertical">
+				<a href="https://www.imdb.com/title/{{ episode.imdb }}" class="btn btn-warning" style="color: black !important;">Go to IMDB page</a>
+				{% if episode in app.user.episode %}
+					<a href="{{ path('remove_user_episode',{'episodeId':episode.id}) }}" class="btn btn-danger" >Remove from viewed</a>
+				{% else %}
+					<a href="{{ path('add_user_episode',{'episodeId':episode.id}) }}" class="btn btn-success" >Add to viewed</a>
+				{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+			{% endfor %}
+</div>
+
+    <a href="{{path('serie_show', {'serieId':serie.Id})}}"  class="btn btn-info">back</a>
+<br>
+<br>
+{% endblock body %}

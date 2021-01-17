@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<h1>
+		on
+		<br><b style="color:red">NextFlix</b>
+	</h1>
+	<p>
+		The brand new plateform of streaming.
+	</p>
+	<p>
+		{% if block('carousel', '/myUser/index.html.twig') is defined %}
+			{{ block('carousel', '/myUser/index.html.twig') }}
+		{% endif %}
+	</p>
+
+{% endblock %}
+
+{% block topage %}{% endblock %}

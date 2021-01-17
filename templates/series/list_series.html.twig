@@ -1,0 +1,142 @@
+{% extends 'base_list_series.html.twig' %}
+
+{% block search %}
+	{% if app.request.request.get("title") != null and condition == null %}
+		{% set condition = app.request.request.get("title") %}
+	{% endif %}
+	{{ parent() }}
+	<br>
+
+	<nav id='menu' class="container" style="margin:auto;text-align:center;">
+		<ul style="margin:auto;">
+			<li>
+				<a href="{{ path('series_list', {'case':"title", 'value':"ASC"}) }}">Reset</a>
+			</li>
+			<li>
+				<a class='dropdown-arrow' href="{{ path('series_list', {'condition':condition,'case':"title", 'value':"ASC"}) }}">Name</a>
+				<ul class='sub-menus'>
+					<li>
+						<a href="{{ path('series_list', {'condition':condition,'case':"title", 'value':"ASC"}) }}">Ascending</a>
+					</li>
+					<li>
+						<a href="{{ path('series_list', {'condition':condition,'case':"title", 'value':"DESC"}) }}">Descending</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a class='dropdown-arrow' href="{{ path('series_list', {'condition':condition,'case':"yearStart", 'value':"ASC"}) }}">Start year</a>
+				<ul class='sub-menus'>
+					<li>
+						<a href="{{ path('series_list', {'condition':condition,'case':"yearStart", 'value':"ASC"}) }}">Ascending</a>
+					</li>
+					<li>
+						<a href="{{ path('series_list', {'condition':condition,'case':"yearStart", 'value':"DESC"}) }}">Descending</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a class='dropdown-arrow' href="{{ path('series_list', {'condition':condition,'case':"rating", 'value':"ASC"}) }}">Users' rating</a>
+				<ul class='sub-menus'>
+					<li>
+						<a href="{{ path('series_list', {'condition':condition,'case':"rating", 'value':"ASC"}) }}">Ascending</a>
+					</li>
+					<li>
+						<a href="{{ path('series_list', {'condition':condition,'case':"rating", 'value':"DESC"}) }}">Descending</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<a class='dropdown-arrow' href="{{ path('series_list', {'condition':condition,'case':"title", 'value':"ASC"}) }}">Country</a>
+				<ul class='sub-menus'>
+					{% for country in countries %}
+						<li>
+							<a href="{{ path('series_list', {'condition':condition,'case':"country", 'value':country.name}) }}">{{country.name}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</li>
+			<li>
+				<a class='dropdown-arrow' href="{{ path('series_list', {'condition':condition,'case':"title", 'value':"ASC"}) }}">Genre</a>
+				<ul class='sub-menus'>
+					{% for genre in genres %}
+						<li>
+							<a href="{{ path('series_list', {'condition':condition,'case':"genre", 'value':genre.name}) }}">{{genre.name}}</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</li>
+			<li>
+				<a href="{{ path('series_list', {'condition':condition,'case':"actual", 'value':"ASC"}) }}">Actual</a>
+			</li>
+		</ul>
+	</nav>
+	<br>
+{% endblock search %}
+
+{% block navigation %}
+</br>
+{% if app.request.attributes.get('_route_params')['page'] is defined %}
+	{% set currentPage = (app.request.attributes.get('_route_params')['page']) %}
+{% else %}
+	{% set currentPage = 1  %}
+{% endif %}
+{% if total > 0 %}
+	<nav aria-label="Page navigation example">
+		<ul class="pagination justify-content-center">
+			{% if  currentPage > 1 %}
+				<li class="page-item enabled">
+					<a class="page-link" href="{{path('series_list', { 'page' : 1, 'case':case, 'value':value, 'condition':condition } ) }}">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				<li class="page-item enabled">
+					<a class="page-link" href="{{path('series_list', { 'page' : currentPage - 1 , 'case':case, 'value':value, 'condition': condition } ) }}">Previous</a>
+				</li>
+			{% else %}
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+						<span aria-hidden="true">Previous</span>
+					</a>
+				</li>
+			{% endif %}
+
+			{% for numPage in 1..(max) %}
+				{% if currentPage == numPage %}
+					<li class="page-item active">
+						<a class="page-link" href="{{path('series_list', {'page' : (numPage), 'case':case, 'value':value,'condition':condition} ) }}" class="btn btn-secondary btn-lg">{{numPage}}</a>
+					</li>
+				{% elseif (currentPage == numPage - 2) or (currentPage == numPage - 1) or (currentPage == numPage + 1) or (currentPage == numPage + 2) %}
+					<li class="page-item">
+						<a class="page-link" href="{{path('series_list', {'page' : (numPage), 'case':case, 'value':value,'condition': condition} ) }}" class="btn btn-secondary btn-lg">{{numPage}}</a>
+					</li>
+				{% endif %}
+			{% endfor %}
+
+			{% if currentPage < max %}
+				<li class="page-item">
+					<a class="page-link" href="{{path('series_list', {'page' : currentPage + 1, 'case':case, 'value':value,'condition': condition} ) }}">Next</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" href="{{path('series_list', {'page' : max , 'case':case, 'value':value,'condition': condition} ) }}">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+			{% else %}
+				<li class="page-item disabled">
+					<a class="page-link" href="#" aria-disabled="true">Next</a>
+				</li>
+				<li class="page-item disabled">
+					<a class="page-link" href="#" aria-disabled="true">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+			{% endif %}
+		</ul>
+	</nav>
+
+{% endif %}{% endblock navigation %}

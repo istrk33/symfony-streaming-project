@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit my comment
+{% endblock %}
+
+{% block body %}
+	{{ include('user_ratings/_form.html.twig', {'button_label': 'Update'}) }}
+
+	<a href="{{ path(lastRoute, { 'lastRoute':'user_comments','ratingId': comment.id,'serieId': comment.series.id}) }}">back</a>
+
+	<a href="{{ path('delete_user_rating', { 'lastRoute':lastRoute,'ratingId': comment.id,'serieId': comment.series.id}) }}" class="btn btn-danger">Delete</a>
+{% endblock %}

@@ -1,0 +1,219 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À propos !
+{% endblock %}
+
+{% block body %}
+	<h1>Groupe : S3-A</h1>
+	<h3>CLOCHARD Amaury - SOYTÜRK Ilker</h3>
+	{% block table %}
+		<table>
+			<thead>
+				<tr>
+					<th>Numéro</th>
+					<th>Fonctionnalité</th>
+					<th>Pas abordée</th>
+					<th>Pas terminée</th>
+					<th>Fonctionnelle</th>
+					<th>Commentaire (éventuel)</th>
+				</tr>
+				<hr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>1</td>
+					<td>Une page d'accueil présentant le site</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td>Notre logo suffit, on profite de la notoriété de Netflix</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>Un menu facilitant la navigation dans le site</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>Une page "à propos", décrivant le travail réalisé et précisant la liste des auteurs du site (le binôme), et éventuellement les difficultés rencontrées (ainsi que ce tableau)</td>
+					<td>X</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td>Une page présentant l'ensemble des séries de la base de données, l'affichage doit être paginé et il doit être possible de rechercher des séries</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td>La possibilité de naviguer dans les saisons d'une série, puis dans les épisodes</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td>un bouton est mis en place pour retourner sur le hub des saisons</td>
+				</tr>
+				<tr>
+					<td>6</td>
+					<td>Chaque fois que c'est pertinent on affichera le poster de la série</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>7</td>
+					<td>Chaque fois que c'est pertinent on affichera le trailer YouTube</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>8</td>
+					<td>Chaque fois que c'est pertinent on affichera un lien vers la fiche IMDB de la série ou de l'épisode
+					</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td>On affiche un lien vers la fiche imdb sur show et lors de l'ajout d'une nouvelle série</td>
+				</tr>
+				<tr>
+					<td>9</td>
+					<td>La possibilité pour un utilisateur de s'inscrire et de se connecter avec un suivi de session</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>10</td>
+					<td>Respect des mesures classiques de sécurité (mot de passe non stocké en clair, CAPTCHA à l'inscription...)</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>11</td>
+					<td>En étant inscrit et connecté seulement, possibilité de noter une série, en ajoutant éventuellement un commentaire optionnel (table rating)</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>12</td>
+					<td>En étant inscrit et connecté seulement, possibilité de classer les séries par note moyenne croissante ou décroissante (en utilisant les notes postées par les utilisateurs du site)</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>13</td>
+					<td>En étant inscrit et connecté seulement, possibilité de "suivre" des séries (à l'aide de la table user_series) et ces séries sont accessibles
+					</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>14</td>
+					<td>En étant inscrit et connecté seulement, possibilité de marquer un épisode comme vu ou non vu. De cette manière, l'utilisateur doit pouvoir visualiser où il en est dans le visionnage d'une série. Il est pertinent de remonter l'information dans la page "saisons"</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td>Pour afficher l'avancement des saisons nous avons mis en place des progress-bar incrustés dans des boutons, qui affiche le taux de progression de l'utilisateur dans la série.</td>
+				</tr>
+				<tr>
+					<td>15</td>
+					<td>Un utilisateur administrateur doit pouvoir modérer les commentaires en les supprimant</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td>Réalisé avec le bundle EasyAdmin 3.</td>
+				</tr>
+				<tr>
+					<td>16</td>
+					<td>Un administrateur devrait pouvoir incorporer des nouvelles séries dans la base de données à l'aide de l'API OMDB</td>
+					<td></td>
+					<td></td>
+					<td>X</td>
+					<td>Réalisé avec curl (pour l'api omdb) et stream_get_contents ( pour le trailer avec l'api de google avec youtube(oui nous avons utilisé différentes technologies :)), nous pouvons chercher une série par son code imdb ou meme par le titre, mais il faut être précis. 
+					Lors de l'ajout d'une série, lorsqu'un pays, un genre ou un acteur n'existe pas dans la base il est rajouté
+					</td>
+				</tr>
+			</tbody>
+		</table>
+<hr>
+		<table> <h3>Fonctionnalités supplémentaires</h3>
+		<tbody>
+			<tr>
+				<th>Fonctionnalité</th>
+				<th>Commentaire (éventuel)</th>
+			</tr>
+			<tr>
+				<td>Site en DarkMode pour le confort de l'utilisateur</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>La pagination, les critères de tris ainsi que la recherche sont compatibles, l'un n'annule pas l'autre</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Tri par note du site mis en place, la moyenne des notes étant visible dans la page de la série</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Les images sont affichés à l'aide de "stream_get_content" et non en base64.</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>La page d'accueil présente des séries au hasard, et redirige vers le login lorsqu'on clique dessus, cela permet de donner envie aux utilisateurs de rejoindre le site</td>
+				<td>Le site étant gratuit, nous avons décidé de ne pas donner accès à notre travail sans une compensation qui est simplement de se créer un compte</td>
+			</tr>
+			<tr>
+				<td>L'héritage a été mis en place afin d'économiser au maximum les répétitions</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Afin de limiter le nombre de requete, en essayant de ne pas récupérer trop d'informations à chaque page, un juste milieu a été trouvé dans l'hydratation</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Possibilité d'ajouter une série en entrant uniquement son nom grâce à l'API OMDB</td>
+				<td>Seulement OMDB ne retourne qu'un résultat par recherche</td>
+			</tr>
+			<tr>
+				<td>Possibilité de voir tous les commentaires sur les séries, de modifier et supprimer nos commentaires.</td>
+				<td>Un anti-spam est mis en place pour éviter de fausser les notes finales</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+			</tr>
+			</tbody>
+		</table>
+	{% endblock table %}
+{% endblock %}

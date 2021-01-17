@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	List series
+{% endblock title %}
+
+{% block body %}
+	{% set currentRoute = (app.request.attributes.get('_route')) %}
+	{% block search %}
+		{% if ((condition is defined) and condition != '' ) %}
+			<i>Actual search :
+				<b>
+					{{condition}}</b>.</i>
+		{% endif %}
+
+		{% if series|length > 0 and (case is defined) and case != "rating" %}
+			<form action="{{ path(currentRoute, { 'page' : 1, 'case':case, 'value':value } ) }}" method="post">
+				<input type="text" name="title" placeholder="series to look for" style="color:white;background:linear-gradient(rgba(0,0,0,.8), rgba(0,0,0,.8))"/>
+				<input type="submit" value="Search" style="color:white;background:linear-gradient(rgba(0,0,0,.8), rgba(0,0,0,.8))"/>
+			</form>
+		{% endif %}
+
+	{% endblock search %}
+
+
+	{% block diplay %}
+		{% if series|length > 0 %}
+			<i>
+				{% if limit > total or ((case is defined) and case == "rating") %}
+					{{ total }}
+				{% else %}
+					{{ limit }}
+				{% endif %}
+				over
+				{{ total }}
+				series</i>
+			<br>
+
+			{% if (case is defined) and case != "rating" %}
+				{% block navigation %}{% endblock %}
+			{% endif %}
+
+			{% if (app.request.attributes.get('_route_params')['page']) is defined %}
+				{% set page = (app.request.attributes.get('_route_params')['page']) %}
+			{% else %}
+				{% set page = 1 %}
+			{% endif %}
+
+			{% if (app.request.attributes.get('_route_params')['condition']) is defined and (app.request.attributes.get('_route_params')['condition']) != "" %}
+				{% set condition = (app.request.attributes.get('_route_params')['condition']) %}
+			{% else %}
+				{% set condition = "NULL" %}
+			{% endif %}
+
+			<br>
+			<div class="row row-cols-1 row-cols-md-5 g-4" style="width: 99%;margin-left:8px;">
+				{% for serie in series %}
+
+					<div class="col">
+						<div class="card bg-dark">
+							<a href="{{ path('serie_show', {'serieId': serie.id}) }}">
+								<img src="{{ path('poster', {'id': serie.id}) }}" class="card-img-top" alt="{{serie.title}}'s poster" style="width: 100%;height:25vw;object-fit:cover;">
+							</a>
+							<div class="card-body">
+								<h5 class="card-title" style="color:white;">{{ serie.title }}</h5>
+								<div class="btn-group-vertical">
+									<a href="{{ path('serie_show', {'serieId': serie.id}) }}" class="btn btn-primary">Go to the description</a>
+
+									{% if serie in app.user.series %}
+										<a href="{{ path('remove_user_series', {'serieId': serie.id, 'lastRoute':currentRoute,'page':page}) }}" class="btn btn-danger">Remove from my favorite</a>
+									{% else %}
+										<a href="{{ path('add_user_series', {'serieId': serie.id, 'lastRoute':currentRoute,'page':page}) }}" class="btn btn-success">Add to my favorite</a>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+				{% endfor %}
+			</div>
+		{% else %}
+			<p colspan="11">No record found.</p>
+		{% endif %}
+	{% endblock diplay %}
+	{{ block('navigation')}}
+
+{% endblock body %}

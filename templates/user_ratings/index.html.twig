@@ -1,0 +1,18 @@
+{% block body %}
+<style>
+.form-control{
+color: rgb(209, 205, 199);
+background-color: rgb(24, 26, 27);
+border-color: rgb(60, 65, 68);
+}
+</style>
+{{ form_start(ratingForm, {'action': path('add_user_rating',{'serieId':serieId}), attr: {novalidate: 'novalidate'}}) }}
+{{ form_label(ratingForm.value, 'Note') }}
+{{ form_widget(ratingForm.value, {'attr': {'class': 'form-control'}}) }}
+<br>
+{{ form_label(ratingForm.comment, 'Comment') }}
+{{ form_widget(ratingForm.comment, {'attr': {'class': 'form-control'}}) }}
+<br>
+{{ form_widget(ratingForm.send, {'attr': {'class': 'btn btn-primary mb-3'}}) }}
+{{ form_end(ratingForm) }}
+{% endblock body %}

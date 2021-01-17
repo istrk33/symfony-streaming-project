@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+	{% for flashError in app.flashes('verify_email_error') %}
+		<div class="alert alert-danger" role="alert">{{ flashError }}</div>
+	{% endfor %}
+
+
+	{{ form_start(registrationForm) }}
+	{{ form_row(registrationForm.name) }}
+	{{ form_row(registrationForm.email) }}
+	{{ form_row(registrationForm.country) }}
+	{{ form_row(registrationForm.plainPassword, {
+            label: 'Password'
+        }) }}
+	{{form_row(registrationForm.captcha)}}
+	{{ form_row(registrationForm.agreeTerms) }}
+	<button type="submit" class="btn btn-primary mb-3">Register</button>
+	{{ form_end(registrationForm) }}
+
+	<input type="button" class="btn btn-primary mb-3" value="Reload Captcha" onclick="window.location.reload();">
+{% endblock %}
+
+{% block topage %}{% endblock %}

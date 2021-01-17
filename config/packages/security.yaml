@@ -1,0 +1,32 @@
+security:
+  access_denied_url: /user/
+  providers:
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
+  encoders:
+    App\Entity\User: #"plaintext"
+      # the new encoder, along with its options
+      algorithm: sha256
+      migrate_from:
+        - bcrypt # uses the "bcrypt" encoder with the default options
+        - legacy # uses the "legacy" encoder configured above
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      anonymous: true
+      guard:
+        authenticators:
+          - App\Security\AppAuthentificatorAuthenticator
+      logout:
+        path: app_logout
+        # where to redirect after logout
+        target: menu_without_connection
+
+  access_control:
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/series, roles: [ROLE_USER, ROLE_ADMIN] }
+    - { path: ^/user/*, roles: [ROLE_USER, ROLE_ADMIN] }

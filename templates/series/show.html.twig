@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	#ytb { width: 50 vw; }
+{% endblock stylesheets %}
+
+{% block title %}
+	{{ serie.title }}
+{% endblock %}
+
+{% block body %}
+	{% set currentRoute = (app.request.attributes.get('_route')) %}
+	<img src="{{ path('poster', {'id': serie.id}) }}" alt="{{serie.title}}'s poster" style="height:350px;object-fit: contain;"/>
+	<br>
+	<br>
+	<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+  		<li class="nav-item" role="presentation">
+   			<a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Informations</a>
+  		</li>
+  		<li class="nav-item" role="presentation">
+    		<a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Trailer</a>
+  		</li>
+  		<li class="nav-item" role="presentation">
+    		<a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Comments</a>
+  		</li>
+	</ul>
+	<div class="tab-content" id="myTabContent">
+  		<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+			<br>
+			<p>Begin in {{ serie.yearStart }}
+			{% if serie.yearEnd is defined and serie.yearEnd != null %}
+				- End in {{ serie.yearEnd }}
+			{% endif %}
+			</p>
+			<br>
+			<p>Note users : <b>{% if serie.rating != -1 %} {{serie.rating}}</b>/10 {% else %} not yet rated</b> {% endif %}
+			</p>
+			<br>
+			<p class="container"><i>{{ serie.plot }}</i></p>
+			<br>
+			<p>Awards :{{ serie.awards }}</p>
+			<br>
+			<p>Country :&nbsp;&nbsp;&nbsp;
+			{% for country in serie.country %}
+			<a href="{{ path('series_list', {'case':"country", 'value':country.name}) }}">{{country}}</a>
+			&nbsp;&nbsp;&nbsp;
+			{% endfor %}
+			<p>Genres : &nbsp;&nbsp;&nbsp;
+			{% for genre in serie.genre  %}
+			<a href="{{ path('series_list', {'case':"genre", 'value':genre.name}) }}">{{genre}}</a> 
+			&nbsp;&nbsp;&nbsp;
+			{% endfor %}
+			</p>
+			<p>Actors :&nbsp;&nbsp;&nbsp;
+			{% for actor in serie.actor %}
+			{{ actor }} 
+			&nbsp;&nbsp;&nbsp;
+			{% endfor %}
+			</p>
+			</p>
+			<br>
+			<p>IMDB page for the serie : <a href="https://www.imdb.com/title/{{ serie.imdb }}" class="btn btn-warning" style="color: black !important;">Go to IMDB page</a></p>
+			<br>
+			<div class="btn-group-vertical">
+				{% for season in serie.seasons|sort ((a, b) => a.number > b.number) %}
+					{% set nbViewedEpisodes = 0 %}	
+					{% for episode in season.episodes %}
+						{% if episode in app.user.episode  %}
+							{% set nbViewedEpisodes = nbViewedEpisodes + 1 %}
+						{% endif %}
+					{% endfor %}
+						{% set seasonProgress = ((nbViewedEpisodes / (season.episodes|length)) * 100)|round %}
+				<a href="{{path('episodes', {'serieId':serie.id, 'seasonId':season.id})}}" class="btn btn-dark btn-outline-danger">
+						Season {{season.number}} ( {{season.nbEpisodes}}
+						{% if (season.nbEpisodes > 1) %}
+							episodes
+					{% else %}
+						episode
+					{% endif %}
+					)
+						<div class="progress" style="margin:20px;border-color:black;">
+	  						<div class="progress-bar bg-danger" role="progressbar" style="width:{{seasonProgress}}%;" aria-valuenow="{{seasonProgress}}" aria-valuemin="0" aria-valuemax="100">{{seasonProgress}}% viewed</div>
+						</div>
+					</a>
+				{% endfor %} 
+			</div>
+		</div>
+  		<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+			<br>
+			{% if serie.youtubeTrailerId is defined %}
+			<div class="embed-responsive embed-responsive-16by9">
+				<iframe id="ytplayer" type="text/html" width="450" height="300" src="http://www.youtube.com/embed/{{ serie.youtubeTrailerId }}" frameborder="0" allowfullscreen/></iframe>
+			</div>
+			{% endif %}
+		</div>
+  		<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+			<br>
+			<div class="container">
+			<div style="overflow-y: scroll; height:250px;background:linear-gradient(rgba(0,0,0,.8), rgba(0,0,0,.8));">
+				{% if serie.comments|length >=1 %}
+				<ul class="list-group">
+					{% for comment in serie.comments %}
+						<li class="list-group-item d-flex justify-content-between align-items-center" style=" background-color: rgba(0, 0, 0, 0.1);">
+    						<div style="width:70%;">
+							<p style="color:grey;">The {{ comment.date|date('d-m-Y') }} at {{ comment.date|date('h:i:s') }} from {{ comment.user }}, note : {{ comment.value }}/10</p>
+							{% if comment.comment != '' %}
+							<p>{{ comment.comment }}</p>
+							{% else %}
+							<p><i>No comment</i></p>
+							{% endif %}
+							</div>
+							{% if app.user == comment.user %}
+							{% set currentRoute = (app.request.attributes.get('_route')) %}
+							<div class="btn-group-vertical" role="group" aria-label="Basic mixed styles example">
+							<a href="{{ path('edit_user_rating', { 'lastRoute':currentRoute,'ratingId': comment.id,'serieId': comment.series.id}) }}" class="btn btn-success">Edit</a>
+							<a href="{{ path('delete_user_rating', { 'lastRoute':currentRoute,'ratingId': comment.id,'serieId': comment.series.id}) }}" class="btn btn-danger">Delete</a>
+						</div>{% endif %}
+  						</li>
+						<hr>
+					{% endfor %}
+				</ul>
+				{% else %}
+					<p>No comment found</p>
+				{% endif %}
+			</div>
+			<br>
+			{% if canComment %}
+				<h5>New comment</h5>
+				{{ render (controller ('App\\Controller\\UserRatingsController::addRating',{'serieId':serie.id})) }}
+				</div>
+			{% endif %}
+		</div>
+	</div>
+	<hr>
+	{% if serie in app.user.series %}
+		<a href="{{ path('remove_user_series', {'serieId': serie.id, 'lastRoute':currentRoute}) }}" class="btn btn-danger">Remove from my favorite</a>
+	{% else %}
+		<a href="{{ path('add_user_series', {'serieId': serie.id, 'lastRoute':currentRoute}) }}" class="btn btn-success">Add to my favorite</a>
+	{% endif %}
+	<br>
+	<br>
+	<a href="{{app.request.headers.get('referer')}}" class="btn btn-info">back</a>
+	<div class="se-pre-con"></div>
+{% endblock body %}

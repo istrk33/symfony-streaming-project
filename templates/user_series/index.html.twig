@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{{app.user.name}}'s Series list
+
+
+ {% for serie in app.user.series %}
+	{{serie.title}}
+ {% endfor %}
+
+{% endblock %}

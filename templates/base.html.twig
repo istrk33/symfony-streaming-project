@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		<title>
+			{% block title %}
+				Welcome
+			{% endblock %}
+		</title>
+		<link type="text/css" rel="stylesheet" media="all" href="{{asset('styleacis.css')}}" />
+		<style>
+			{% block stylesheet %}{% endblock stylesheet %}
+		</style>
+		<script>
+			function topFunction() {
+				document.body.scrollTop = 0;
+				document.documentElement.scrollTop = 0;
+			}
+		</script>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+			<div class="container-fluid">
+				{% if app.user %}
+					{% if is_granted('ROLE_ADMIN') %}
+						<a class="navbar-brand" style="font-family: 'Gill Sans', sans-serif;color: #FF8424;font-weight: 700;">ADMIN
+						</a>
+					{% endif %}
+					<a class="navbar-brand">{{app.user.name}}</a>
+				{% else %}
+					<a class="navbar-brand">Guest</a>
+				{% endif %}
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarNavDropdown" style="font-family: 'Gill Sans', sans-serif;">
+					<ul class="navbar-nav">
+						{% if app.user %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{path('menu')}}">Home</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{path('series_list')}}">All Series</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{path('user_series')}}">My series</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{path('user_comments')}}">My messages</a>
+							</li>
+							{% if is_granted('ROLE_ADMIN') %}
+								<li class="nav-item">
+									<a class="nav-link" href="{{path('admin')}}" style="font-family: 'Gill Sans', sans-serif;;color: #FF8424;font-weight: 700;">My Admin Area</a>
+								</li>
+							{% endif %}
+							<li class="nav-item ">
+								<a class="nav-link" href="{{path('app_logout')}}" style="color: red !important;font-weight: 700;">Disconnect</a>
+							</li>
+						{% else %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{path('menu_without_connection')}}">Home</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{path('app_login')}}">Connection</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{path('app_register')}}">Inscription</a>
+							</li>
+						{% endif %}
+						<li class="nav-item">
+							<a class="nav-link" href="{{path('about')}}">About</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<br><br>
+		{% block h1 %}
+			<h1>{{ block('title')}}</h1>
+		{% endblock h1 %}
+
+		{% block body %}{% endblock %}
+		{% block javascripts %}
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+			<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+		{% endblock %}
+
+		{% block topage %}
+			<input type="button" id="top-button" value="&uarr;" onclick="topFunction()">
+		{% endblock %}
+
+	</body>
+</html>

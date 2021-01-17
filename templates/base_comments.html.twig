@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+	{% if comments|length > 0 %}
+		<i>{{ nbResults }}
+			over
+			{{ totalNbComments }}
+			comments</i>
+		<br>
+		{% set currentRoute = (app.request.attributes.get('_route')) %}
+		{% set previousId = -1 %}
+		<div class="container">
+			<div class="row row-cols-2 row-cols-md-5 g-4">
+				
+					{% for comment in comments %}
+						{% if comment.series.id != previousId %}
+							{% set previousId = comment.series.id %}
+						</ul>
+						<ul class="list-group col">
+							<li class="list-group-item justify-content-between align-items-center bg-dark">
+								<a href="{{ path('serie_show', {'serieId': comment.series.id}) }}">
+									<img src="{{ path('poster', {'id': comment.series.id}) }}" alt="{{comment.series.title}}'s poster" style="width: 100%;height:24vw;object-fit: cover;"/>
+									<br>
+									<br>
+									<h5 class="card-title">{{ comment.series.title }}</h5>
+								</a>
+							</li>
+						{% endif %}
+						<li
+							class="list-group-item d-flex justify-content-between align-items-center bg-dark">
+							{# change the text color if the comment is the user one #}
+							{% if is_granted('ROLE_ADMIN') or route == "user_comments" or (route == "all_comments" and comment in usercomments) %}
+								<p class="card-text" style="color:red;">
+									{{ comment.value}}/10
+									{{ comment.comment}}</p>
+								<br>
+								<div class="btn-group-vertical" role="group" aria-label="Basic mixed styles example">
+									<a href="{{ path('edit_user_rating', { 'lastRoute':currentRoute,'ratingId': comment.id,'serieId': comment.series.id}) }}" class="btn btn-success">Edit</a>
+									<a href="{{ path('delete_user_rating', { 'lastRoute':currentRoute,'ratingId': comment.id,'serieId': comment.series.id}) }}" class="btn btn-danger">Delete</a>
+								</div>
+							{% else %}
+								<p class="card-text">
+									{{ comment.value}}/10
+									{{ comment.comment}}</p>
+							{% endif %}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div><br>
+		{% block see_plusoumoins %}
+		<div class="btn-group" role="group" aria-label="Basic example">
+			{% if nbResults > 10 %}
+				<a href="{{ path(route, {'nbResults':(nbResults - 10)} )}}" class="btn btn-danger">See less comments</a>
+			{% endif %}
+			{% if nbResults < totalNbComments %}
+				<a href="{{ path(route, {'nbResults':(nbResults + 10)} )}}" class="btn btn-success">See more comments</a>
+				<a href="{{ path(route, {'nbResults':(totalNbComments)} )}}" class="btn btn-warning">See all
+					{{ route }}
+				</a>
+			{% endif %}
+		</div>
+		{% endblock see_plusoumoins %}
+	{% else %}No comment found.
+	{% endif %}
+	<br>
+	{% block changeComment %}
+		<a href="{{ path(changeroute)}}" class="btn btn-primary">See
+			{{ changeroute }}</a>
+	{% endblock changeComment %}
+{% endblock body %}

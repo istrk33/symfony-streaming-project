@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add new Serie automatically from OMDB{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+<a href="{{path('admin')}}" class="btn btn-warning">Back to main Admin Area</a>
+<br>
+<br>
+<form action="{{ path('add_omdb_series') }}" method="post">
+    <label for="title">Serie to search by title</label><br>
+    <input type="text" name="title"/>
+    <input type="submit" value="Search" />
+</form>
+<br>
+<br>
+<form action="{{ path('add_omdb_series') }}" method="post">
+    <label for="imdb">Serie to search by imdb</label><br>
+    <input type="text" name="imdb"/>
+    <input type="submit" value="Search" />
+</form>
+
+<br>
+{% if (searchData != "Nothing to found")  %}
+<div class="container">
+<h1>{{ searchData["Title"] }}</h1>
+<p>{{ searchData["Plot"] }}</p>
+<a href="https://www.imdb.com/title/{{ searchData["imdbID"] }}">Go to IMDB Page</a><br>
+<img src="{{ searchData["Poster"] }}" alt="{{ searchData["Title"] }}'s poster"><br>
+{{ searchData["Director"] }}<br>
+{{ searchData["Awards"] }}<br>
+{{ searchData["Year"] }}
+<p>{{ searchData["totalSeasons"] }} seasons </p>
+<br>
+<a href="{{path('add_omdb')}}" class="btn btn-success">Add to new Series</a>
+</div>
+{% else  %}
+<p> {{ searchData }} </p>
+{% endif  %}
+{% if message == 'success' %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{message}}
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

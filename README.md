@@ -4,3 +4,4 @@ After clonong the project, launch the command "composer update", "composer insta
 Database in [here](https://gregwar.com/s3web/files/shows.sql.zip) or [here](https://gregwar.com/s3web/files/shows.sql).
 
 # DB schema
+![img](db.png)
